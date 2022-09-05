@@ -1,32 +1,47 @@
 ﻿using CarAPI.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarAPI.Repositories
 {
     public class CarRepository : ICarRepository
     {
-        public Task<Car> Create(Car car)
+
+        public readonly CarContext _CarContext;
+
+        public CarRepository(CarContext Context)
         {
-            throw new NotImplementedException();
+            _CarContext = Context;
         }
 
-        public Task Delete(int id)
+        public async Task<Car> Create(Car car)
         {
-            throw new NotImplementedException();
+            _CarContext.Cars.Add(car);
+            await _CarContext.SaveChangesAsync();
+            return car;
         }
 
-        public Task<IEnumerable<Car>> Get()
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var carDelete = await _CarContext.Cars.FindAsync(id);
+            _CarContext.Cars.Remove(carDelete);
+            await _CarContext.SaveChangesAsync();
         }
 
-        public Task<Car> Get(int id)
+        public async Task<IEnumerable<Car>> Get()
         {
-            throw new NotImplementedException();
+          return await  _CarContext.Cars.ToListAsync();
         }
 
-        public Task<Car> Update(Car car)
+        public async Task<Car> Get(int id)
         {
-            throw new NotImplementedException();
+            return await _CarContext.Cars.FindAsync(id);
         }
+
+        public async Task Update(Car car)
+        {
+            _CarContext.Entry(car).State = EntityState.Modified;
+            await _CarContext.SaveChangesAsync();
+        }
+
     }
 }

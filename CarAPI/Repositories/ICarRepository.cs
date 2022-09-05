@@ -7,7 +7,7 @@ namespace CarAPI.Repositories
         Task<IEnumerable<Car>> Get();
         Task<Car> Get(int id);
         Task<Car> Create(Car car);
-        Task<Car> Update(Car car);
+        Task Update(Car car);
         Task Delete(int id);
     }
 }
